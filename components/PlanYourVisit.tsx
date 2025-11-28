@@ -1,3 +1,4 @@
+"use client";
 import React, { useMemo, useState } from "react";
 import { Shirt, Clock, ParkingCircle, CheckCircle2 } from "lucide-react";
 
