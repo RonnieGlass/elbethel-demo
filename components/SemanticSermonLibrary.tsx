@@ -181,4 +181,107 @@ export default function SemanticSermonLibrary() {
                 <p className="mt-1 text-sm italic text-neutral-300">{s.pain}</p>
                 <div className="mt-4 flex items-center gap-3 text-xs text-neutral-400">
                   <span className="rounded-full bg-white/5 px-2 py-1">
-                    Tagged: {
+                    Tagged: {s.topic}
+                  </span>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Video Modal */}
+      {selectedVideo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl">
+            <button 
+              onClick={() => setSelectedVideo(null)}
+              className="absolute right-4 top-4 z-10 rounded-full bg-black/50 p-2 text-white hover:bg-white/20"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            <div className="aspect-video w-full">
+              <iframe
+                width="100%"
+                height="100%"
+                src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
+    </main>
+  );
+}
+
+const primaryPillStyle: React.CSSProperties = {
+  backgroundImage:
+    "linear-gradient(135deg, rgb(67,56,202) 0%, rgb(79,70,229) 20%, rgb(245,158,11) 100%)",
+};
+
+const ghostPillStyle: React.CSSProperties = {
+  background: "rgba(255,255,255,0.06)",
+  border: "1px solid rgba(255,255,255,0.12)",
+};
+
+function Badge({ topic }: { topic: string }) {
+  const { bg, text, ring } = topicColors(topic);
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${bg} ${text} ring-1 ${ring}`}
+    >
+      {topic}
+    </span>
+  );
+}
+
+function topicColors(topic: string) {
+  switch (topic) {
+    case "Courage":
+      return {
+        bg: "bg-indigo-600/20",
+        text: "text-indigo-200",
+        ring: "ring-indigo-400/30",
+      };
+    case "Grief":
+      return {
+        bg: "bg-slate-500/20",
+        text: "text-slate-200",
+        ring: "ring-slate-300/30",
+      };
+    case "Purpose":
+      return {
+        bg: "bg-amber-600/20",
+        text: "text-amber-200",
+        ring: "ring-amber-300/30",
+      };
+    case "Patience":
+      return {
+        bg: "bg-cyan-600/20",
+        text: "text-cyan-200",
+        ring: "ring-cyan-300/30",
+      };
+    case "Faith":
+      return {
+        bg: "bg-emerald-600/20",
+        text: "text-emerald-200",
+        ring: "ring-emerald-300/30",
+      };
+    case "Suffering":
+      return {
+        bg: "bg-rose-600/20",
+        text: "text-rose-200",
+        ring: "ring-rose-300/30",
+      };
+    default:
+      return {
+        bg: "bg-white/10",
+        text: "text-neutral-200",
+        ring: "ring-white/20",
+      };
+  }
+}
