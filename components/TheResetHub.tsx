@@ -6,22 +6,78 @@ import {
   PlayCircle,
   X,
   ArrowRightCircle,
+  Quote,
+  BookOpen
 } from "lucide-react";
 
 const TOTAL_DAYS = 30;
 const STORAGE_KEY = "resetHub.completedDays";
 
-// DEMO VIDEO: "Something God Can Build With" (Used as Day 1 Devotional)
-const DAY_1_VIDEO_ID = "oiuiaIUm5I8";
-
-const WEEK1_TITLES: Record<number, string> = {
-  1: "Recalibrate (Completed)",
-  2: "The Sound of Silence",
-  3: "Breaking Agreement with Fear",
-  4: "Who God Says You Are",
-  5: "The Discipline of Rest",
-  6: "Worship as a Weapon",
-  7: "Sabbath & Celebration",
+// --- PASTOR GLASS CONTENT DATABASE ---
+const DAYS_DATA: Record<number, { title: string; subtitle: string; quote: string; sermonTitle: string; videoId: string; teaching: string; action: string }> = {
+  1: {
+    title: "Recalibrate",
+    subtitle: "What does it profit a man to gain the world but lose his soul?",
+    quote: "We can lose strength when seduced by worldly desires, just as Superman is weakened by Kryptonite. Don't trade your spiritual integrity for temporary pleasures.",
+    sermonTitle: "Don't Lose It (Jan 28)",
+    videoId: "dB2zykbthy0",
+    teaching: "Priorities determine power. Pastor Glass reminds us that 'Pride and earthly desires' can cause us to lose our soul. We must recalibrate our hearts to value the spiritual over the material.",
+    action: "List 3 things you prioritized over God this week. Repent and reset."
+  },
+  2: {
+    title: "The Sound of Silence",
+    subtitle: "Making room for the Savior in the private places.",
+    quote: "We must make Jesus feel at home in every part of our lives—not just the 'public' areas, but the private ones too. You cannot just let Him into the living room but lock Him out of the basement.",
+    sermonTitle: "The Making Of A Strong House",
+    videoId: "qPJ0KBNwelY",
+    teaching: "Noise is the enemy of intimacy. To build a 'Savior-accommodating house,' you must lower the volume of the world so you can open the private doors of your heart to the whisper of the Spirit.",
+    action: "Turn off the radio in the car today. Drive in silence and ask: 'Lord, are You comfortable in this home?'"
+  },
+  3: {
+    title: "Breaking Agreement with Fear",
+    subtitle: "Lift up your head. The King is coming in.",
+    quote: "When you look down, you see the problem. When you lift up your head, you see the King of Glory. He is the Lord strong and mighty in battle.",
+    sermonTitle: "Heads Up! (Oct 1)",
+    videoId: "sQ-xGqqLoBQ",
+    teaching: "We often look down in discouragement, but the command is to 'Lift up your heads!' God is the Commander of all armies. Shift your focus from the problem on the ground to the Commander in the Heavens.",
+    action: "Physically lift your head when you pray today. Declare: 'The King of Glory is coming in.'"
+  },
+  4: {
+    title: "Who God Says You Are",
+    subtitle: "You are a city on a hill. You cannot be hidden.",
+    quote: "God didn't light your lamp to put it under a basket. The world is dark, and your purpose is to shine. Let them see your good works.",
+    sermonTitle: "Let's Get Lit! (Oct 22)",
+    videoId: "SclVSQ2AasM",
+    teaching: "You are the light of the world. Pastor Glass teaches that we must 'Get Lighter' by casting off burdens so we can shine brighter. Don't hide your testimony.",
+    action: "Send an encouraging text to someone right now. Shine your light."
+  },
+  5: {
+    title: "The Discipline of Rest",
+    subtitle: "Finding peace in the midst of the process.",
+    quote: "He was wounded for our transgressions. Sometimes we must embrace the suffering to find the purpose, knowing that by His stripes, we are healed.",
+    sermonTitle: "The Successful Suffering Servant",
+    videoId: "vrZRhx_Lek0",
+    teaching: "Rest is not inactivity; it is trust. We rest in the finished work of the Suffering Servant. Your pain has a purpose when placed in His hands.",
+    action: "Take 15 minutes to sit and do nothing but breathe. Trust Him with the outcome."
+  },
+  6: {
+    title: "Worship as a Weapon",
+    subtitle: "Unity commands the blessing.",
+    quote: "Behold how good and pleasant it is! When we dwell together in unity, God doesn't just suggest a blessing—He commands it.",
+    sermonTitle: "There, IT Is! (Feb 4)",
+    videoId: "gWmR-JYKzQA",
+    teaching: "Worship is warfare. When we unify our hearts and lift our voices, we command a blessing to fall. Confusion cannot stay where worship lives.",
+    action: "Play worship music in your home for one hour today. Shift the atmosphere."
+  },
+  7: {
+    title: "Sabbath & Celebration",
+    subtitle: "Living in the victory of the Resurrection.",
+    quote: "If we only had hope in this life, we would be miserable. But He is risen! We live with purpose because the victory is already won.",
+    sermonTitle: "He's Up Now! (March 31)",
+    videoId: "H7OTdzRgSmA",
+    teaching: "We celebrate because the grave is empty. The Resurrection is the seal of your victory. Live today like a winner.",
+    action: "Write down one victory God gave you this week. Celebrate it."
+  },
 };
 
 export default function TheResetHub() {
@@ -72,18 +128,13 @@ export default function TheResetHub() {
 
   function handleContinue() {
     if (!nextIncompleteDay) return;
-    const el = document.getElementById(`day-card-${nextIncompleteDay}`);
-    const grid = document.getElementById("reset-grid");
-    if (grid) grid.scrollIntoView({ behavior: "smooth", block: "start" });
-    if (el) {
-      el.classList.add("ring-2", "ring-amber-300", "animate-pulse");
-      setTimeout(
-        () =>
-          el.classList.remove("ring-2", "ring-amber-300", "animate-pulse"),
-        1600
-      );
+    // For demo purposes, we allow jumping to any of the first 7 days
+    if (nextIncompleteDay <= 7) {
+        setOpenDay(nextIncompleteDay);
+    } else {
+        // If they finished day 7, just open day 7 again for the demo
+        setOpenDay(7);
     }
-    if (nextIncompleteDay === 1) setOpenDay(1);
   }
 
   return (
@@ -136,239 +187,24 @@ export default function TheResetHub() {
       <section id="reset-grid" className="mx-auto max-w-6xl px-6 pb-20">
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
           {days.map((day) => {
+            const data = DAYS_DATA[day];
             const demoUnlocked = day <= 7;
             const isUnlocked = demoUnlocked || !!completed[day - 1];
             const isDone = !!completed[day];
-            const title =
-              WEEK1_TITLES[day] || (isUnlocked ? "Unlocked" : "Locked");
-
-            const subtitle =
-              day === 1
-                ? "Begin with stillness. Make space for God to speak."
-                : WEEK1_TITLES[day]
-                ? "Focused, practical formation for the day."
-                : isUnlocked
-                ? "Ready when you are."
-                : "Complete the previous day to unlock.";
+            
+            // Logic to ensure we show titles ONLY if data exists
+            const title = data ? data.title : (isUnlocked ? "Unlocked" : "Locked");
+            const subtitle = data 
+                ? data.subtitle 
+                : (isUnlocked ? "Ready when you are." : "Complete the previous day to unlock.");
 
             return (
               <button
                 id={`day-card-${day}`}
                 key={day}
-                onClick={() => isUnlocked && day === 1 && setOpenDay(day)}
+                onClick={() => isUnlocked && data && setOpenDay(day)}
                 className={[
                   "group flex flex-col items-start rounded-2xl border p-4 text-left transition ring-offset-0",
                   isUnlocked
                     ? "border-white/15 bg-white/5 hover:bg-white/10"
-                    : "cursor-not-allowed border-white/10 bg-neutral-900/60",
-                ].join(" ")}
-                aria-disabled={!isUnlocked}
-              >
-                <div className="flex w-full items-center justify-between">
-                  <span className="text-sm uppercase tracking-wide text-neutral-400">
-                    Day {day}
-                  </span>
-                  {isUnlocked ? (
-                    isDone ? (
-                      <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                    ) : (
-                      <PlayCircle className="h-5 w-5 text-amber-300" />
-                    )
-                  ) : (
-                    <Lock className="h-5 w-5 text-neutral-500" />
-                  )}
-                </div>
-                <h3 className="mt-3 text-base font-medium">{title}</h3>
-                <p className="mt-1 line-clamp-2 text-sm text-neutral-400">
-                  {subtitle}
-                </p>
-                {isUnlocked && day !== 1 && (
-                  <p className="mt-3 text-xs text-neutral-500">
-                    (Demo: tap Day 1 to view the devotional modal)
-                  </p>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Day 1 Modal */}
-      {openDay === 1 && (
-        <DayOneModal
-          onClose={() => setOpenDay(null)}
-          onMarkComplete={() => handleMarkComplete(1)}
-          completed={!!completed[1]}
-          celebrating={celebrating}
-        />
-      )}
-
-      <div id="confetti-root" className="pointer-events-none fixed inset-0 z-50" />
-
-      <style jsx global>{`
-        .btn-primary {
-          @apply rounded-xl px-5 py-3 font-medium text-white shadow-md transition hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-400/60 active:scale-[0.99];
-          background-image: linear-gradient(
-            135deg,
-            rgb(67, 56, 202) 0%,
-            rgb(79, 70, 229) 20%,
-            rgb(245, 158, 11) 100%
-          );
-        }
-        .btn-ghost {
-          @apply rounded-xl px-4 py-2 text-neutral-200 hover:bg-white/10;
-        }
-        @keyframes confetti-fall {
-          0% {
-            transform: translateY(-10vh) rotate(0);
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(110vh) rotate(720deg);
-            opacity: 0;
-          }
-        }
-      `}</style>
-    </div>
-  );
-}
-
-function DayOneModal({
-  onClose,
-  onMarkComplete,
-  completed,
-  celebrating,
-}: {
-  onClose: () => void;
-  onMarkComplete: () => void;
-  completed: boolean;
-  celebrating: boolean;
-}) {
-  return (
-    <div role="dialog" aria-modal="true" className="fixed inset-0 z-40">
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className="absolute inset-x-0 top-10 mx-auto w-full max-w-3xl px-6">
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-neutral-950">
-          <button
-            onClick={onClose}
-            className="btn-ghost absolute right-3 top-3 z-10"
-            aria-label="Close"
-          >
-            <X className="h-5 w-5" />
-          </button>
-
-          {/* VIDEO PLAYER (Replaces Placeholder) */}
-          <div className="aspect-video w-full bg-black">
-             <iframe
-                width="100%"
-                height="100%"
-                src={`https://www.youtube.com/embed/${DAY_1_VIDEO_ID}?autoplay=0`}
-                title="Day 1 Devotional"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-          </div>
-
-          {/* Content */}
-          <div className="p-6 sm:p-8">
-            <div className="space-y-2">
-              <p className="text-xs uppercase tracking-wider text-neutral-400">
-                Scripture Focus
-              </p>
-              <blockquote className="text-2xl font-medium leading-snug text-neutral-100 sm:text-3xl">
-                “Be still, and know that I am God.”{" "}
-                <span className="text-neutral-400">— Psalm 46:10</span>
-              </blockquote>
-            </div>
-
-            <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
-              <p className="text-sm uppercase tracking-wider text-neutral-300">
-                Action Step
-              </p>
-              <p className="mt-2 text-neutral-200">
-                Set a 10-minute timer today. Sit in stillness before the Lord.
-                Breathe slowly. When distractions come, return to the Name of
-                Jesus.
-              </p>
-            </div>
-
-            <div className="mt-6 flex items-center gap-3">
-              <button
-                className="btn-primary"
-                onClick={onMarkComplete}
-                disabled={completed}
-              >
-                {completed ? "Completed" : "Mark Complete"}
-              </button>
-              {completed && (
-                <div className="flex items-center gap-2 text-emerald-400">
-                  <CheckCircle2 className="h-5 w-5" />
-                  <span className="text-sm">We&apos;ve got you covered!</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {celebrating && <CelebrationOverlay />}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CelebrationOverlay() {
-  return (
-    <div className="pointer-events-none absolute inset-0 z-10">
-      <div className="absolute inset-0 bg-gradient-to-b from-amber-300/5 to-indigo-500/5" />
-    </div>
-  );
-}
-
-function spawnConfetti() {
-  if (typeof document === "undefined") return;
-  const root = document.getElementById("confetti-root");
-  if (!root) return;
-
-  const colors = [
-    "#fde68a",
-    "#fbbf24",
-    "#c4b5fd",
-    "#818cf8",
-    "#a5b4fc",
-    "#f59e0b",
-    "#eab308",
-  ];
-  const count = 60;
-
-  for (let i = 0; i < count; i++) {
-    const piece = document.createElement("span");
-    piece.style.position = "absolute";
-    piece.style.top = "-10vh";
-    piece.style.left = Math.random() * 100 + "vw";
-    piece.style.width = Math.random() * 8 + 4 + "px";
-    piece.style.height = Math.random() * 14 + 6 + "px";
-    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-    piece.style.opacity = "0";
-    piece.style.transform = `translateY(0) rotate(${
-      Math.random() * 360
-    }deg)`;
-    piece.style.borderRadius = "2px";
-    // @ts-ignore
-    piece.style.animation = `confetti-fall ${
-      1.2 + Math.random() * 1.2
-    }s ease-out forwards`;
-    root.appendChild(piece);
-    setTimeout(() => {
-      try {
-        root.removeChild(piece);
-      } catch {}
-    }, 2000);
-  }
-}
+                    : "
