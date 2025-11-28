@@ -2,70 +2,76 @@
 import React, { useMemo, useState } from "react";
 import { Sparkles, Filter, PlayCircle, X } from "lucide-react";
 
-// For the demo, we will use the "Church That Speaks Up" video for all cards
-// In the real app, each card would have its own unique ID.
-const DEMO_VIDEO_ID = "sQ-xGqqLoBQ"; 
-
 const SERMONS = [
   {
     title: "The Church That Speaks Up!",
     topic: "Courage",
     pain: "For those feeling their voice doesn't matter.",
     date: "Nov 2024",
+    videoId: "sQ-xGqqLoBQ", // Real ID
   },
   {
     title: "Responding To Hard Questions",
     topic: "Grief",
     pain: "For those struggling to understand why God allows loss.",
     date: "Oct 2024",
+    videoId: "oiuiaIUm5I8", // Using 'Something God Can Build With' as placeholder
   },
   {
     title: "The Drama of Being Gifted!",
     topic: "Purpose",
     pain: "For those who feel burdened or isolated by their own talent.",
     date: "Sept 2024",
+    videoId: "MybSuoaWvHg", // Real ID
   },
   {
     title: "Ready For a 'When...'!",
     topic: "Patience",
     pain: "For those waiting on a promise that feels delayed.",
     date: "Aug 2024",
+    videoId: "sQ-xGqqLoBQ", // Placeholder
   },
   {
     title: "The Wheel of Circumstances",
     topic: "Resilience",
     pain: "For those feeling like life is spinning out of control.",
     date: "Aug 2024",
+    videoId: "oiuiaIUm5I8", // Placeholder
   },
   {
     title: "Something God Can Build With",
     topic: "Faith",
     pain: "For those who feel they don't have enough to offer God.",
     date: "July 2024",
+    videoId: "oiuiaIUm5I8", // Real ID
   },
   {
     title: "Valley Time!",
     topic: "Suffering",
     pain: "For those currently in a low season where God feels distant.",
     date: "June 2024",
+    videoId: "MybSuoaWvHg", // Placeholder
   },
   {
     title: "Keep On Shining",
     topic: "Legacy",
     pain: "For those tired of serving and needing a reminder it matters.",
     date: "May 2024",
+    videoId: "sQ-xGqqLoBQ", // Placeholder
   },
   {
     title: "Rescuing The Prophet",
     topic: "Leadership",
     pain: "For those feeling the weight of supporting their leaders.",
     date: "April 2024",
+    videoId: "oiuiaIUm5I8", // Placeholder
   },
   {
     title: "When God Opens Eyes",
     topic: "Vision",
     pain: "For those who feel stuck in a dead situation.",
     date: "March 2024",
+    videoId: "MybSuoaWvHg", // Placeholder
   },
 ] as const;
 
@@ -152,12 +158,15 @@ export default function SemanticSermonLibrary() {
           {filtered.map((s, idx) => (
             <article
               key={idx}
-              onClick={() => setSelectedVideo(DEMO_VIDEO_ID)}
+              onClick={() => setSelectedVideo(s.videoId)}
               className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-sm transition hover:-translate-y-1 hover:border-white/20 hover:shadow-lg"
             >
               {/* Thumbnail Area with Play Button Overlay */}
               <div className="relative aspect-video w-full bg-gradient-to-br from-indigo-900/40 to-amber-700/20 p-0.5">
-                <div className="h-full w-full rounded-[1rem] bg-neutral-950 ring-1 ring-white/10" />
+                <div className="h-full w-full rounded-[1rem] bg-neutral-950 ring-1 ring-white/10">
+                   {/* OPTIONAL: To show real YouTube thumbnails, uncomment the line below */}
+                   {/* <img src={`https://img.youtube.com/vi/${s.videoId}/hqdefault.jpg`} className="h-full w-full object-cover opacity-60 transition group-hover:opacity-80 rounded-[1rem]" /> */}
+                </div>
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
                   <div className="rounded-full bg-black/50 p-3 backdrop-blur-sm">
                     <PlayCircle className="h-8 w-8 text-amber-300" />
