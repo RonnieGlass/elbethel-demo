@@ -1,6 +1,10 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { Sparkles, Filter } from "lucide-react";
+import { Sparkles, Filter, PlayCircle, X } from "lucide-react";
+
+// For the demo, we will use the "Church That Speaks Up" video for all cards
+// In the real app, each card would have its own unique ID.
+const DEMO_VIDEO_ID = "sQ-xGqqLoBQ"; 
 
 const SERMONS = [
   {
@@ -79,6 +83,7 @@ type FilterType = (typeof FILTERS)[number];
 
 export default function SemanticSermonLibrary() {
   const [filter, setFilter] = useState<FilterType>("All");
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   const filtered = useMemo(
     () => (filter === "All" ? SERMONS : SERMONS.filter((s) => s.topic === filter)),
@@ -147,24 +152,29 @@ export default function SemanticSermonLibrary() {
           {filtered.map((s, idx) => (
             <article
               key={idx}
-              className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-sm transition hover:shadow-lg"
+              onClick={() => setSelectedVideo(DEMO_VIDEO_ID)}
+              className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-sm transition hover:-translate-y-1 hover:border-white/20 hover:shadow-lg"
             >
-              <div className="aspect-video w-full bg-gradient-to-br from-indigo-900/40 to-amber-700/20 p-0.5">
+              {/* Thumbnail Area with Play Button Overlay */}
+              <div className="relative aspect-video w-full bg-gradient-to-br from-indigo-900/40 to-amber-700/20 p-0.5">
                 <div className="h-full w-full rounded-[1rem] bg-neutral-950 ring-1 ring-white/10" />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
+                  <div className="rounded-full bg-black/50 p-3 backdrop-blur-sm">
+                    <PlayCircle className="h-8 w-8 text-amber-300" />
+                  </div>
+                </div>
               </div>
+              
               <div className="p-4">
                 <div className="mb-2 flex items-center justify-between">
                   <Badge topic={s.topic} />
                   <span className="text-xs text-neutral-400">{s.date}</span>
                 </div>
-                <h3 className="text-base font-semibold text-white">{s.title}</h3>
+                <h3 className="text-base font-semibold text-white group-hover:text-amber-200 transition-colors">{s.title}</h3>
                 <p className="mt-1 text-sm italic text-neutral-300">{s.pain}</p>
                 <div className="mt-4 flex items-center gap-3 text-xs text-neutral-400">
                   <span className="rounded-full bg-white/5 px-2 py-1">
                     Tagged: {s.topic}
-                  </span>
-                  <span className="rounded-full bg-white/5 px-2 py-1">
-                    Concierge
                   </span>
                 </div>
               </div>
@@ -172,6 +182,31 @@ export default function SemanticSermonLibrary() {
           ))}
         </div>
       </section>
+
+      {/* Video Modal */}
+      {selectedVideo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-md">
+          <div className="relative w-full max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl">
+            <button 
+              onClick={() => setSelectedVideo(null)}
+              className="absolute right-4 top-4 z-10 rounded-full bg-black/50 p-2 text-white hover:bg-white/20"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            <div className="aspect-video w-full">
+              <iframe
+                width="100%"
+                height="100%"
+                src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
