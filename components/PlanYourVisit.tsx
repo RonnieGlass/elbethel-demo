@@ -1,11 +1,16 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { Shirt, Clock, ParkingCircle, CheckCircle2 } from "lucide-react";
+import { Shirt, Clock, ParkingCircle, CheckCircle2, PlayCircle, X } from "lucide-react";
+
+// DEMO VIDEO: "Ready For a When" (Used as Welcome Video)
+const WELCOME_VIDEO_ID = "MybSuoaWvHg"; 
 
 export default function PlanYourVisit() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [bringingKids, setBringingKids] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+  
   const upcomingSundays = useMemo(() => getNextSundays(10), []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -42,21 +47,9 @@ export default function PlanYourVisit() {
     <main className="min-h-screen bg-neutral-950 text-neutral-100">
       {/* Hero */}
       <section className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <video
-            className="h-full w-full object-cover opacity-60"
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster="/hero-fallback.jpg"
-          >
-            <source
-              src="/welcome-greeters-placeholder.mp4"
-              type="video/mp4"
-            />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80" />
+        <div className="absolute inset-0 -z-10 bg-neutral-900">
+           {/* Fallback gradient since we don't have the local video file */}
+           <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-neutral-900 to-amber-900/20" />
         </div>
 
         <div className="mx-auto max-w-6xl px-6 py-28 sm:py-36">
@@ -70,10 +63,17 @@ export default function PlanYourVisit() {
               We can&apos;t wait to meet you. Let us know you&apos;re coming,
               and we&apos;ll roll out the red carpet.
             </p>
-            <div className="mt-10">
+            <div className="mt-10 flex flex-wrap gap-4">
               <a href="#vip" className="btn-primary inline-flex items-center gap-2">
                 Schedule Your VIP Visit
               </a>
+              <button 
+                onClick={() => setShowVideo(true)}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3 font-medium text-white transition hover:bg-white/20"
+              >
+                <PlayCircle className="h-5 w-5 text-amber-300" />
+                Watch Welcome Video
+              </button>
             </div>
           </div>
         </div>
@@ -256,7 +256,7 @@ export default function PlanYourVisit() {
         </div>
       </section>
 
-      {/* FAQ (short demo) */}
+      {/* FAQ */}
       <section className="bg-white/5 py-16">
         <div className="mx-auto max-w-4xl px-6">
           <h2 className="text-center text-3xl font-semibold">FAQ</h2>
@@ -283,6 +283,31 @@ export default function PlanYourVisit() {
           </div>
         </div>
       </section>
+
+      {/* Video Modal */}
+      {showVideo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-md">
+          <div className="relative w-full max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl">
+            <button 
+              onClick={() => setShowVideo(false)}
+              className="absolute right-4 top-4 z-10 rounded-full bg-black/50 p-2 text-white hover:bg-white/20"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            <div className="aspect-video w-full">
+              <iframe
+                width="100%"
+                height="100%"
+                src={`https://www.youtube.com/embed/${WELCOME_VIDEO_ID}?autoplay=1`}
+                title="Welcome Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style jsx global>{`
         .btn-primary {

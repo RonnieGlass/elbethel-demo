@@ -11,6 +11,9 @@ import {
 const TOTAL_DAYS = 30;
 const STORAGE_KEY = "resetHub.completedDays";
 
+// DEMO VIDEO: "Something God Can Build With" (Used as Day 1 Devotional)
+const DAY_1_VIDEO_ID = "oiuiaIUm5I8";
+
 const WEEK1_TITLES: Record<number, string> = {
   1: "Recalibrate (Completed)",
   2: "The Sound of Silence",
@@ -254,22 +257,23 @@ function DayOneModal({
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-neutral-950">
           <button
             onClick={onClose}
-            className="btn-ghost absolute right-3 top-3"
+            className="btn-ghost absolute right-3 top-3 z-10"
             aria-label="Close"
           >
             <X className="h-5 w-5" />
           </button>
 
-          {/* Video placeholder */}
-          <div className="aspect-video w-full bg-gradient-to-br from-indigo-900/40 to-amber-700/20 p-0.5">
-            <div className="flex h-full w-full items-center justify-center rounded-[1rem] bg-neutral-950 ring-1 ring-white/10">
-              <div className="flex items-center gap-3 text-neutral-300">
-                <PlayCircle className="h-6 w-6 text-amber-300" />
-                <span className="text-sm sm:text-base">
-                  Day 1 Devotional with Pastor Glass
-                </span>
-              </div>
-            </div>
+          {/* VIDEO PLAYER (Replaces Placeholder) */}
+          <div className="aspect-video w-full bg-black">
+             <iframe
+                width="100%"
+                height="100%"
+                src={`https://www.youtube.com/embed/${DAY_1_VIDEO_ID}?autoplay=0`}
+                title="Day 1 Devotional"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
           </div>
 
           {/* Content */}
